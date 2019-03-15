@@ -7,7 +7,6 @@ using System.Linq;
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeySkipTests
     {
         [Test]
@@ -15,7 +14,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeySelect(employees);
+            var actual = JoeySkip(employees, 2);
 
             var expected = new List<Employee>
             {
@@ -24,12 +23,33 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joseph", LastName = "Yao"},
             };
 
-            expected.ToExpectedObject().ShouldEqual(actual.ToList());
+            expected.ToExpectedObject().ShouldMatch(actual.ToList());
         }
 
-        private IEnumerable<Employee> JoeySelect(IEnumerable<Employee> employees)
+        [Test]
+        public void numbers_skip_3()
         {
-            throw new System.NotImplementedException();
+            var numbers = new[] { 10, 20, 30, 40 };
+
+            var actual = JoeySkip(numbers, 3);
+            var expected = new[] { 40 };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        private IEnumerable<TSource> JoeySkip<TSource>(IEnumerable<TSource> employees, int skipCount)
+        {
+            var employeeEnumerator = employees.GetEnumerator();
+            var index = 0;
+            while (employeeEnumerator.MoveNext())
+            {
+                var employee = employeeEnumerator.Current;
+                if (index >= skipCount)
+                {
+                    yield return employee;
+                }
+                index++;
+            }
         }
 
         private static IEnumerable<Employee> GetEmployees()
