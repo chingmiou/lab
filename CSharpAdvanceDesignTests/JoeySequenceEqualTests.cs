@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Lab.Entities;
+using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace CSharpAdvanceDesignTests
@@ -62,17 +63,51 @@ namespace CSharpAdvanceDesignTests
         }
 
         [Test]
-        public void two_numbers_all_empty()
+        public void compare_two_numbers_contains_0()
         {
-            var first = new List<int> { };
-            var second = new List<int> { };
+            var first = new List<int> { 3, 2, 0 };
+            var second = new List<int> { 3, 2 };
+
+            var actual = JoeySequenceEqual(first, second);
+
+            Assert.IsFalse(actual);
+        }
+
+        //        [Test]
+        //        public void two_empty_numbers()
+        //        {
+        //            var first = new List<int> { };
+        //            var second = new List<int> { };
+        //
+        //            var actual = JoeySequenceEqual(first, second);
+        //
+        //            Assert.IsTrue(actual);
+        //        }
+
+        [Test]
+        [Ignore("not yet")]
+        public void two_employees_sequence_equal()
+        {
+            var first = new List<Employee>
+            {
+                new Employee() {FirstName = "Joey", LastName = "Chen", Phone = "123"},
+                new Employee() {FirstName = "Tom", LastName = "Li", Phone = "456"},
+                new Employee() {FirstName = "David", LastName = "Wang", Phone = "789"},
+            };
+
+            var second = new List<Employee>
+            {
+                new Employee() {FirstName = "Joey", LastName = "Chen", Phone = "123"},
+                new Employee() {FirstName = "Tom", LastName = "Li", Phone = "123"},
+                new Employee() {FirstName = "David", LastName = "Wang", Phone = "123"},
+            };
 
             var actual = JoeySequenceEqual(first, second);
 
             Assert.IsTrue(actual);
         }
 
-        private bool JoeySequenceEqual(IEnumerable<int> first, IEnumerable<int> second)
+        private bool JoeySequenceEqual<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
@@ -91,7 +126,9 @@ namespace CSharpAdvanceDesignTests
                     return true;
                 }
 
-                if (IsValidDifferent(firstEnumerator, secondEnumerator))
+                var comparer = new JoeyEqualityComparerName();
+
+                if (!firstEnumerator.Current.Equals(secondEnumerator.Current))
                 {
                     return false;
                 }
@@ -123,11 +160,6 @@ namespace CSharpAdvanceDesignTests
         private static bool IsLengthDifferent(bool firstFlag, bool secondFlag)
         {
             return firstFlag != secondFlag;
-        }
-
-        private static bool IsValidDifferent(IEnumerator<int> firstEnumerator, IEnumerator<int> secondEnumerator)
-        {
-            return firstEnumerator.Current != secondEnumerator.Current;
         }
 
         private static bool IsEnd(bool firstFlag)
