@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Lab.Entities;
+using System;
 using System.Collections.Generic;
-using Lab.Entities;
 
 namespace Lab
 {
@@ -87,6 +87,27 @@ namespace Lab
             }
 
             return last;
+        }
+
+        public static IEnumerable<Employee> JoeyReverse(this IEnumerable<Employee> employees)
+        {
+            return new Stack<Employee>(employees);
+            //            var stack = new Stack<Employee>(employees);
+            //            var enumerator = stack.GetEnumerator();
+            //            while (enumerator.MoveNext())
+            //            {
+            //                yield return enumerator.Current;
+            //            }
+            //            var employeeEnumerator = employees.GetEnumerator();
+            //            var reverse = new Stack<Employee>();
+            //
+            //            while (employeeEnumerator.MoveNext())
+            //            {
+            //                var employee = employeeEnumerator.Current;
+            //                reverse.Push(employee);
+            //            }
+            //
+            //            return reverse;
         }
     }
 }
