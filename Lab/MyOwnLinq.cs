@@ -65,5 +65,28 @@ namespace Lab
                 index++;
             }
         }
+
+        public static TSource JoeyFirstOrDefault<TSource>(this IEnumerable<TSource> employees)
+        {
+            var employeeEnumerator = employees.GetEnumerator();
+            if (employeeEnumerator.MoveNext())
+                return employeeEnumerator.Current;
+            else
+                return default(TSource);
+            ;
+        }
+
+        public static TSource JoeyLastOrDefault<TSource>(this IEnumerable<TSource> employees)
+        {
+            var employeeEnumerator = employees.GetEnumerator();
+            TSource last = default(TSource);
+            while (employeeEnumerator.MoveNext())
+            {
+                var employee = employeeEnumerator.Current;
+                last = employee;
+            }
+
+            return last;
+        }
     }
 }
