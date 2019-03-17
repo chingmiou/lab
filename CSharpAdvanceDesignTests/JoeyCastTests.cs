@@ -3,26 +3,43 @@ using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture()]
-    [Ignore("not yet")]
     public class JoeyCastTests
     {
         [Test]
         public void cast_int_exception_when_ArrayList_has_string()
         {
-            var arrayList = new ArrayList { 1, "2", 3 };
+            var arrayList = new ArrayList { 1, "a", 3 };
 
-            void TestDelegate() => JoeyCast<int>(arrayList);
+            void TestDelegate() => JoeyCast<int>(arrayList).ToArray();
 
-            Assert.Throws<InvalidCastException>(TestDelegate);
+            Assert.Throws<JoeyCastException>(TestDelegate);
         }
 
         private IEnumerable<T> JoeyCast<T>(IEnumerable source)
         {
-            throw new System.NotImplementedException();
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (current is T item)
+                {
+                    yield return item;
+                }
+                else
+                {
+                    throw new JoeyCastException();
+                }
+                //                yield return (T)current;
+            }
         }
+    }
+
+    public class JoeyCastException : Exception
+    {
     }
 }
