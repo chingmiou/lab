@@ -98,13 +98,13 @@ namespace CSharpAdvanceDesignTests
                 new Pet() {Name = "Joey-QQ"},
             };
 
-//            var actual = JoeyJoin(
-//                employees,
-//                pets,
-//                e => e.FirstName,
-//                p => p.Name.Split('-')[0],
-//                EqualityComparer<string>.Default,
-//                (e, p) => $"{e.FirstName[0]}-{p.Name.Split('-')[1]}");
+            //            var actual = JoeyJoin(
+            //                employees,
+            //                pets,
+            //                e => e.FirstName,
+            //                p => p.Name.Split('-')[0],
+            //                EqualityComparer<string>.Default,
+            //                (e, p) => $"{e.FirstName[0]}-{p.Name.Split('-')[1]}");
 
             var expected = new[]
             {
@@ -114,7 +114,7 @@ namespace CSharpAdvanceDesignTests
                 "T-Fufu",
             };
 
-//            expected.ToExpectedObject().ShouldMatch(actual);
+            //            expected.ToExpectedObject().ShouldMatch(actual);
         }
 
         private IEnumerable<TResult> JoeyJoin<TOuter, TInner, TKey, TResult>(IEnumerable<TOuter> outer,
@@ -129,7 +129,7 @@ namespace CSharpAdvanceDesignTests
                 while (petEnumberator.MoveNext())
                 {
                     var innerCurrent = petEnumberator.Current;
-                    
+
                     if (outerKeySelector(outerCurrent).Equals(innerKeySelector(innerCurrent)))
                     {
                         yield return resultSelector(outerCurrent, innerCurrent);
