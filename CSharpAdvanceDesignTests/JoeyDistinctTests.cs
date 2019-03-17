@@ -2,6 +2,7 @@
 using Lab.Entities;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using System;
 using System.Collections.Generic;
 
 namespace CSharpAdvanceDesignTests
@@ -13,7 +14,7 @@ namespace CSharpAdvanceDesignTests
         public void distinct_numbers()
         {
             var numbers = new[] { 91, 3, 91, -1 };
-            var actual = JoeyDistinct(numbers);
+            var actual = JoeyDistinctWithEqualityComparer(numbers, EqualityComparer<int>.Default);
 
             var expected = new[] { 91, 3, -1 };
 
@@ -31,7 +32,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            var actual = JoeyDistinctWithEqualityComparer(employees);
+            var actual = JoeyDistinctWithEqualityComparer(employees, new EmployeeEqualityComparer());
 
             var expected = new[]
             {
@@ -40,14 +41,13 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Tom", LastName = "Li"},
             };
 
-            //            expected.ToExpectedObject().ShouldMatch(actual);
+            expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyDistinctWithEqualityComparer(IEnumerable<Employee> employees)
+        private IEnumerable<TSource> JoeyDistinctWithEqualityComparer<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
         {
-            var hashSet = new HashSet<Employee>();
-            var enumerator = employees.GetEnumerator();
-            var compare = new EmployyEqualityCompare();
+            var hashSet = new HashSet<TSource>(comparer);
+            var enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
@@ -58,22 +58,13 @@ namespace CSharpAdvanceDesignTests
             }
         }
 
-        private IEnumerable<int> JoeyDistinct(IEnumerable<int> numbers)
+        private IEnumerable<TSource> JoeyDistinct<TSource>(IEnumerable<TSource> source, EqualityComparer<TSource> equalityComparer)
         {
-            return new HashSet<int>(numbers, EqualityComparer<int>.Default);
-            //            var enumerator = numbers.GetEnumerator();
-            //            while (enumerator.MoveNext())
-            //            {
-            //                var current = enumerator.Current;
-            //                if (hashSet.Add(current))
-            //                {
-            //                    yield return current;
-            //                }
-            //            }
+            return new HashSet<TSource>(source, equalityComparer);
         }
     }
 
-    internal class EmployyEqualityCompare : IEqualityComparer<Employee>
+    internal class EmployeeEqualityComparer : IEqualityComparer<Employee>
     {
         public bool Equals(Employee x, Employee y)
         {
@@ -82,8 +73,7 @@ namespace CSharpAdvanceDesignTests
 
         public int GetHashCode(Employee obj)
         {
-            //            return new Tuple<Employee>{obj.FirstName, obj.LastName}.GetHashCode();
-            return obj.GetHashCode();
+            return Tuple.Create(obj.FirstName, obj.FirstName).GetHashCode();
         }
     }
 }
